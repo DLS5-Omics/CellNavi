@@ -1,6 +1,6 @@
-# scLeap
+# CellNavi
 
-scLeap is a pre-trained deep learning framework designed to predict genes driving cell-state transitions with single-cell CRISPR screening data.
+CellNavi is a deep learning framework designed to predict genes driving cellular transitions.
 
 ## Getting Started
 
@@ -9,7 +9,7 @@ scLeap is a pre-trained deep learning framework designed to predict genes drivin
 1. Clone the repo
 
 ```sh
-git clone https://github.com/DLS5-Omics/scLeap.git
+git clone https://github.com/DLS5-Omics/CellNavi.git
 ```
 
 2. Install python dependencies
