@@ -128,10 +128,7 @@ class HCADataset(Dataset):
         self.perturb_rows = {}
         for k in self.reader.get_file_names():
             perturb_rows = self.reader.get_perturb_rows(k)
-            if self.train:
-                self.perturb_rows[k] = [_ for _ in perturb_rows]
-            else:
-                self.perturb_rows[k] = [_ for _ in perturb_rows]
+            self.perturb_rows[k] = [_ for _ in perturb_rows]
             self.cell_name = self.reader.data[self.hca[0]]['hca'].obs.index[self.perturb_rows[k]]
 
             print(f"dataset info: {k} {len(self.perturb_rows[k])}")

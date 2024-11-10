@@ -22,8 +22,8 @@ class Config:
 
         # for training
         self.mixed_precision = True
-        self.nr_step = 500
-        self.warmup_step = 50
+        self.nr_step = 3000
+        self.warmup_step = 500
         try:
             import torch
 
@@ -51,7 +51,7 @@ class Config:
     @property
     @functools.lru_cache(maxsize=1)
     def dataset_dir(self):
-        path = Path(f"/home/yan/ISPert/dataset_full")
+        path = Path(f"/home/pany3/pany3/CellNavi/dataset_full")
         if path.exists():
             return path
         raise Exception("DatasetNotFoundError")
@@ -59,7 +59,7 @@ class Config:
     @property
     @ensure_dir
     def saved_dir(self):
-        return Path(f"/home/yan/ISPert/dataset_full/")
+        return Path(f"/home/pany3/pany3/CellNavi/dataset_full/")
 
     @property
     @functools.lru_cache(maxsize=1)

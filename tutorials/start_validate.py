@@ -59,6 +59,7 @@ def _validate_fn(model):
                 b_losses[k].append(v.item())
             for k, v in metrics.items():
                 b_metrics[k].append(v)
+
         if i % 100 == 99:
 
             loss_str = ", ".join(

@@ -52,7 +52,7 @@ def _load_fn(model):
     
     out_array = np.empty((0, cat_len))
     
-    file_path = "results.csv"
+    file_path = "set3_test_example_results.csv"
 
     for i, data in enumerate(tqdm(vl)):
         

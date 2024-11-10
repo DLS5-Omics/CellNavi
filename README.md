@@ -20,7 +20,7 @@ pip install -r requirements.txt
 
 ## Tutorials
 
-Please refer to `tutorials/README.md`. 
+Please refer to `tutorials/README.md` and `tutorials/Tutorial_perturbation.ipynb`. 
 
 ## Datasets provided for tutorial
 
@@ -33,8 +33,9 @@ The full descriptions of the datasets and the studies of origin can be found in 
 
 ### Example datasets
 
-- Example training and testing datasets, with adjacency matrix graph and shortest path graph provided: [link](https://www.dropbox.com/scl/fo/rq9klah7vqksn6e66dsae/AK3DJ2sxwL3MoWCOcQ9ZfFE?rlkey=1t4kz2vraif0ifu72c6gmo6xl&st=gpvwfw3j&dl=0)
+- Example training and testing datasets and model path file under 1,000 training step, with adjacency matrix graph and shortest path graph provided: [link](https://www.dropbox.com/scl/fo/rq9klah7vqksn6e66dsae/AK3DJ2sxwL3MoWCOcQ9ZfFE?rlkey=1t4kz2vraif0ifu72c6gmo6xl&st=gpvwfw3j&dl=0)
 
 
 ## Citation
 
+Wang, T.$^\dagger$, {\bf Pan, Y.$^\dagger$}, Ju, F.$^\dagger$, Zheng, S.$^\dagger$, Liu, C.$^\dagger$, Min, Y., Liu, X., Xia, H., Liu, G., Liu, H., \& Deng, P. (2024). Directing cellular transitions on gene graph-enhanced cell state manifold.
