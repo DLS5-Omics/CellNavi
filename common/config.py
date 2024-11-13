@@ -11,6 +11,10 @@ from .logger import Logger
 
 __all__ = ["config"]
 
+#save_path = f"/home/PATH_TO_SAVE"
+save_path = f"/data/tianzew/cellnavi/save_path"
+#data_path = f"/home/PATH_TO_DATA"
+data_path = f"/data/tianzew/cellnavi/data_path"
 
 class Config:
     def __init__(self):
@@ -51,7 +55,7 @@ class Config:
     @property
     @functools.lru_cache(maxsize=1)
     def dataset_dir(self):
-        path = Path(f"/home/pany3/pany3/CellNavi/dataset_full")
+        path = Path(data_path)
         if path.exists():
             return path
         raise Exception("DatasetNotFoundError")
@@ -59,7 +63,7 @@ class Config:
     @property
     @ensure_dir
     def saved_dir(self):
-        return Path(f"/home/pany3/pany3/CellNavi/dataset_full/")
+        return Path(save_path)
 
     @property
     @functools.lru_cache(maxsize=1)
