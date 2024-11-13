@@ -1,7 +1,7 @@
 anndata==0.10.8
 click==8.1.7
 lmdb==1.4.1
-numpy==1.22.4
+numpy==1.23.5
 pandas==1.5.3
 PyYAML==6.0.1
 scanpy==1.10.2

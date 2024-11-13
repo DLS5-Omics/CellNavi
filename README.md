@@ -12,9 +12,17 @@ CellNavi is a deep learning framework designed to predict genes driving cellular
 git clone https://github.com/DLS5-Omics/CellNavi.git
 ```
 
-2. Install python dependencies
+2. Create conda environment
 
 ```sh
+conda create -n cellnavi python=3.10
+conda activate cellnavi
+```
+
+3. Install python dependencies
+
+```sh
+cd ./CellNavi
 pip install -r requirements.txt
 ```
 
