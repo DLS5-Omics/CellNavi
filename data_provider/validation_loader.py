@@ -18,7 +18,7 @@ class ValidationSampler:
     def __iter__(self):
         i = 0
         while True:
-            if i == self.end_iter - 1:
+            if i == self.end_iter:
                 return
             else:
                 yield i

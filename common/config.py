@@ -12,9 +12,9 @@ from .logger import Logger
 __all__ = ["config"]
 
 #save_path = f"/home/PATH_TO_SAVE"
-save_path = f"/data/tianzew/cellnavi/save_path"
+save_path = f"/home/pany3/pany3/CellNavi/dataset_full/"
 #data_path = f"/home/PATH_TO_DATA"
-data_path = f"/data/tianzew/cellnavi/data_path"
+data_path = f"/home/pany3/pany3/CellNavi/dataset_full/"
 
 class Config:
     def __init__(self):
