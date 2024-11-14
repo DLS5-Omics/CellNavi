@@ -15,7 +15,7 @@ git clone https://github.com/DLS5-Omics/CellNavi.git
 2. Create conda environment
 
 ```sh
-conda create -n cellnavi python=3.10
+conda create -n cellnavi python=3.12
 conda activate cellnavi
 ```
 
