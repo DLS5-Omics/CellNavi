@@ -47,8 +47,9 @@ def _load_fn(model):
     
     vl = ValidationLoader()
     dataset = vl._dataset
-    perturb_list = dataset._perturb_all
-    cat_len = len(perturb_list.cat.categories.tolist())
+    tl = TrainLoader()
+    perturb_list = tl._dataset._perturb_all
+    cat_len = len(perturb_list.astype('category').cat.categories.tolist())
     
     out_array = np.empty((0, cat_len))
     
@@ -69,7 +70,7 @@ def _load_fn(model):
         label_list.append(pred)
         
     df = pd.DataFrame(out_array)
-    df.columns = perturb_list.cat.categories.tolist()
+    df.columns = perturb_list.astype('category').cat.categories.tolist()
     df.index = cell_name
     df.to_csv(file_path)
     out_array = np.empty((0, cat_len))

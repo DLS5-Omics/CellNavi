@@ -13,9 +13,22 @@ def main():
     local_rank = int(os.environ["LOCAL_RANK"])
     master_ip = os.environ["MASTER_ADDR"]
     master_port = os.environ["MASTER_PORT"]
-
     master_uri = "tcp://%s:%s" % (master_ip, master_port)
+
+    try:
+        # Check the number of GPUs available
+        gpu_count = torch.cuda.device_count()
+        if gpu_count > 0:
+            print(f"CUDA is available. Number of GPUs: {gpu_count}")
+        else:
+            print("CUDA is available, but no GPUs are detected.")
+    except Exception as e:
+
+        print(f"Error checking CUDA availability: {e}")
+
+
     torch.distributed.init_process_group(
+        
         backend="nccl",
         init_method=master_uri,
         world_size=world_size,
