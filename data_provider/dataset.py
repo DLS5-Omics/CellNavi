@@ -241,7 +241,7 @@ class HCADataset(Dataset):
 
 class TrainDataset(Dataset):
     def __init__(self):
-        with open('../trainer/config.json', 'r') as f:
+        with open('../config.json', 'r') as f:
             self.params = json.load(f)
         self.dataset_dir = Path(self.params['dataset_dir'])
         self.train_data = self.params['train_data']
@@ -275,7 +275,7 @@ class TrainDataset(Dataset):
 
 class ValidationDataset(Dataset):
     def __init__(self):
-        with open('../trainer/config.json', 'r') as f:
+        with open('../config.json', 'r') as f:
             self.params = json.load(f)
         self.dataset_dir = Path(self.params['dataset_dir'])
         self.test_data = self.params['test_data']

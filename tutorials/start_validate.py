@@ -5,17 +5,13 @@ import sys
 import json
 from pathlib import Path
 from sklearn.metrics import f1_score
-
 sys.path.append(str(Path(__file__).resolve().parent.parent))
-
 import click
 import torch
 import torch.nn.functional as F
 from tqdm import tqdm
 import numpy as np
 from tabulate import tabulate
-
-# from common import config as cfg
 from model.finetune_model import FinetuneModel as model_fn
 from data_provider.validation_loader import ValidationLoader
 
@@ -82,7 +78,7 @@ def evaluate(checkpoint):
     """
     Test checkpoint
     """
-    with open('../trainer/config.json', 'r') as f:
+    with open('../config.json', 'r') as f:
             params = json.load(f)
     model_dir = Path(params['model_dir'])
     model = load_model(checkpoint, model_dir)

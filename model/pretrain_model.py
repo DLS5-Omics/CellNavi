@@ -1,8 +1,6 @@
 import torch
 from torch import nn
 import torch.nn.functional as F
-
-# from common import config as cfg
 import numpy as np
 from .base_model import BaseModel
 from .attention import TransformerEncoder, TransformerDecoder

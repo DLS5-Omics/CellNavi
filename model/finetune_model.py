@@ -1,9 +1,6 @@
 import torch
 from torch import nn
 import torch.nn.functional as F
-
-
-# from common import config as cfg
 from .base_model import BaseModel
 from .pretrain_model import PretrainModel
 from sklearn.metrics import f1_score

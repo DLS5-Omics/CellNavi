@@ -25,7 +25,7 @@ class Trainer:
 
         self.device = torch.device("cuda:%i" % local_rank)    
         
-        with open('../trainer/config.json', 'r') as f:
+        with open('../config.json', 'r') as f:
             self.params = json.load(f)
         self.global_batch_size = self.params['global_batch_size']
         self.local_batch_size = self.params['local_batch_size']
@@ -35,9 +35,6 @@ class Trainer:
         self.mixed_precision = self.params['mixed_precision']
         self.chk_time_interval = self.params['chk_time_interval']
         self.chk_step_interval = [self.params['chk_step_interval']]
-        # self.saved_dir = Path(self.params['saved_dir'])
-        # self.pretrained_dir = Path(self.params['pretrained_dir'])
-        # self.dataset_dir = Path(self.params['dataset_dir'])
         self.log_dir = Path(self.params['log_dir'])
         self.model_dir = Path(self.params['model_dir'])
         self.pretrain_model_dir = Path(self.params['pretrain_model_dir'])
