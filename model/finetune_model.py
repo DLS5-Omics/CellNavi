@@ -3,7 +3,7 @@ from torch import nn
 import torch.nn.functional as F
 
 
-from common import config as cfg
+# from common import config as cfg
 from .base_model import BaseModel
 from .pretrain_model import PretrainModel
 from sklearn.metrics import f1_score
@@ -15,6 +15,7 @@ class FinetuneModel(BaseModel):
         self.pretrain = PretrainModel(pretrain=False)
         inplane = self.pretrain.d_model
         self.d_model = 256
+        self.n_cls = 2058
         self.embed_in_degree = nn.Sequential(
             nn.Embedding(20000, self.d_model, padding_idx=0)
         )
@@ -28,7 +29,7 @@ class FinetuneModel(BaseModel):
             nn.Dropout(0.1),
             nn.Linear(inplane, inplane * 4),
             nn.ReLU(),
-            nn.Linear(inplane * 4, cfg.n_cls),
+            nn.Linear(inplane * 4, self.n_cls),
         )
 
     def forward(self, data):

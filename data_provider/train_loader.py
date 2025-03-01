@@ -6,7 +6,6 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
-from common import config as cfg
 from .dataset import TrainDataset
 
 
@@ -28,6 +27,5 @@ class TrainLoader(DataLoader):
             batch_size=None,
             sampler=self._sampler,
             num_workers=6,
-            # num_workers=0,
             pin_memory=True,
         )

@@ -5,6 +5,7 @@ import pickle
 import random
 from pathlib import Path
 
+import json
 import lmdb
 import numpy as np
 import scanpy as sc
@@ -12,7 +13,7 @@ import torch
 from torch.utils.data.dataset import Dataset
 import scipy.sparse
 
-from common import config as cfg
+# from common import config as cfg
 
 
 class LMDBReader:
@@ -52,10 +53,10 @@ class LMDBReader:
 
 
 class H5ADReader:
-    def __init__(self, path_list):
+    def __init__(self, path_list, dataset_dir, dist_graph):
         self.path_list = path_list
         self.data = {}
-        mtx = pd.read_csv(os.path.join(cfg.dataset_dir, "shortest_path_integrated_network_setting3_all_genes.csv"), header=0, index_col=0)
+        mtx = pd.read_csv(os.path.join(dataset_dir, dist_graph), header=0, index_col=0)
         gene_list = list(mtx.columns)
         self.mtx = mtx.values
         for k in path_list:
@@ -106,9 +107,10 @@ class H5ADReader:
 
 
 class HCADataset(Dataset):
-    def __init__(self, path_list, train=True):
+    def __init__(self, data_dir, data_name, dist_graph, train=True):
+        path_list = [os.path.join(data_dir, data_name)]
         self.train = train
-        self.reader = H5ADReader(path_list)
+        self.reader = H5ADReader(path_list, data_dir, dist_graph)
         self.hca = self.reader.get_file_names()
         self.weights = []
         for name in self.hca:
@@ -117,7 +119,7 @@ class HCADataset(Dataset):
         self.weights = self.weights / self.weights.sum()
         self.perturb_all = self.reader.data[self.hca[0]]['hca'].obs.perturbation
         self.gene2token = {}
-        for i, x in enumerate(open(cfg.pretrain_model_dir / "gene_name.txt")):
+        for i, x in enumerate(open(data_dir / "gene_name.txt")):
             self.gene2token[x.strip()] = i
 
         for k in range(len(self.hca)):
@@ -239,12 +241,21 @@ class HCADataset(Dataset):
 
 class TrainDataset(Dataset):
     def __init__(self):
+        with open('../trainer/config.json', 'r') as f:
+            self.params = json.load(f)
+        self.dataset_dir = Path(self.params['dataset_dir'])
+        self.train_data = self.params['train_data']
+        self.adj_graph = self.params['adj_graph']
+        self.dist_graph = self.params['dist_graph']
+        
         ds = HCADataset(
-            [os.path.join(cfg.dataset_dir, "set3_example_train.h5ad")]
+            self.dataset_dir, self.train_data, self.dist_graph
         )
         self._dataset = ds
+        self._cell_name = ds.cell_name
+        self._perturb_all = ds.perturb_all
         
-        mtx = pd.read_csv(os.path.join(cfg.dataset_dir, "integrated_network_setting3_all_genes.csv"),header=0, index_col=0)
+        mtx = pd.read_csv(os.path.join(self.dataset_dir, self.adj_graph),header=0, index_col=0)
         self._in_degree = mtx.sum(axis=0)
         self._out_degree = mtx.sum(axis=1)
 
@@ -264,15 +275,22 @@ class TrainDataset(Dataset):
 
 class ValidationDataset(Dataset):
     def __init__(self):
+        with open('../trainer/config.json', 'r') as f:
+            self.params = json.load(f)
+        self.dataset_dir = Path(self.params['dataset_dir'])
+        self.test_data = self.params['test_data']
+        self.adj_graph = self.params['adj_graph']
+        self.dist_graph = self.params['dist_graph']
+        
         ds = HCADataset(
-            [os.path.join(cfg.dataset_dir, "set3_example_test.h5ad")],
+            self.dataset_dir, self.test_data, self.dist_graph,
             train=False,
         )
         self._dataset = ds
         self._cell_name = ds.cell_name
         self._perturb_all = ds.perturb_all
         
-        mtx = pd.read_csv(os.path.join(cfg.dataset_dir, "integrated_network_setting3_all_genes.csv"),header=0, index_col=0)
+        mtx = pd.read_csv(os.path.join(self.dataset_dir, self.adj_graph),header=0, index_col=0)
         self._in_degree = mtx.sum(axis=0)
         self._out_degree = mtx.sum(axis=1)
         

@@ -46,4 +46,4 @@ The full descriptions of the datasets and the studies of origin can be found in 
 
 ## Citation
 
-Wang, T., Pan, Y., Ju, F., Zheng, S., Liu, C., Min, Y., Liu, X., Xia, H., Liu, G., Liu, H., \& Deng, P. (2024). Directing cellular transitions on gene graph-enhanced cell state manifold. bioRxiv, 2024.10.27.620174; doi: [link](https://doi.org/10.1101/2024.10.27.620174)
+Wang, T., Pan, Y., Ju, F., Zheng, S., Liu, C., Min, Y., Liu, X., Xia, H., Liu, G., Liu, H., \& Deng, P. (2024). Directing cellular transitions on gene graph-enhanced cell state manifold. _bioRxiv_, 2024.10.27.620174; doi: [https://doi.org/10.1101/2024.10.27.620174](https://doi.org/10.1101/2024.10.27.620174)

@@ -1,11 +1,11 @@
 import re
 import time
 import queue
-import shutil
 import threading
+import json
 import os
 from collections import defaultdict
-from sklearn.metrics import f1_score
+from .logger import Logger
 
 import torch
 from torch.nn.parallel import DistributedDataParallel as DDP
@@ -13,7 +13,8 @@ from torch.utils.tensorboard import SummaryWriter
 
 from data_provider.train_loader import TrainLoader
 from data_provider.validation_loader import ValidationLoader
-from common import config as cfg
+# from common import config as cfg
+from pathlib import Path
 from model.finetune_model import FinetuneModel as model_fn
 
 
@@ -24,11 +25,36 @@ class Trainer:
 
         self.device = torch.device("cuda:%i" % local_rank)    
         
+        with open('../trainer/config.json', 'r') as f:
+            self.params = json.load(f)
+        self.global_batch_size = self.params['global_batch_size']
+        self.local_batch_size = self.params['local_batch_size']
+        self.warmup_step = self.params['warmup_step']
+        self.lr = self.params['lr']
+        self.nr_step = self.params['nr_step']
+        self.mixed_precision = self.params['mixed_precision']
+        self.chk_time_interval = self.params['chk_time_interval']
+        self.chk_step_interval = [self.params['chk_step_interval']]
+        # self.saved_dir = Path(self.params['saved_dir'])
+        # self.pretrained_dir = Path(self.params['pretrained_dir'])
+        # self.dataset_dir = Path(self.params['dataset_dir'])
+        self.log_dir = Path(self.params['log_dir'])
+        self.model_dir = Path(self.params['model_dir'])
+        self.pretrain_model_dir = Path(self.params['pretrain_model_dir'])
+
+        self.n_gpu = torch.distributed.get_world_size()
+
+        self.n_accumulate = (
+            self.global_batch_size // self.n_gpu // self.local_batch_size
+        )
+        
+        
         self.dp = TrainLoader()
         self.vp = ValidationLoader()
         self.model = model_fn().to(self.device)
         if world_rank == 0:
-            self.logger = cfg.train_logger
+            # self.logger = cfg.train_logger
+            self.logger = Logger(self.log_dir / "train_log.txt")
             self.logger.info(str(self.model))
         self.model = DDP(self.model, device_ids=[self.local_rank])
 
@@ -49,7 +75,7 @@ class Trainer:
             factor = lr * n_warmup**0.5
             return factor * min(step**-0.5, step * n_warmup**-1.5)
 
-        lr = inverse_sqrt_root_schedule(self.step + 1, cfg.warmup_step, cfg.lr)
+        lr = inverse_sqrt_root_schedule(self.step + 1, self.warmup_step, self.lr)
         for g in self.optimizer.param_groups:
             g["lr"] = lr
 
@@ -57,8 +83,8 @@ class Trainer:
         dp = iter(self.dp)
         cur_time = last_saved_time = start_time = time.time()
         n_trained = 0
-        scaler = torch.cuda.amp.GradScaler()
-        for i in range(self.step + 1, cfg.nr_step + 1):
+        scaler = torch.amp.GradScaler('cuda')
+        for i in range(self.step + 1, self.nr_step + 1):
             self.adjust_learning_rate()
 
             b_losses, b_metrics = defaultdict(list), defaultdict(list)
@@ -66,7 +92,7 @@ class Trainer:
             def step_forward():
                 nonlocal dp, scaler
                 data = {k: v.to(self.device) for k, v in next(dp).items()}
-                with torch.cuda.amp.autocast(enabled=cfg.mixed_precision):
+                with torch.amp.autocast('cuda', enabled = self.mixed_precision):
                     output = self.model(data)
                     losses = {k: v for k, v in output.items() if k.endswith("loss")}
                     metrics = {
@@ -75,7 +101,7 @@ class Trainer:
                         if k.endswith("_acc") or k.startswith("token") or k.endswith("f1")
                     }
                     loss = output["update_loss"]
-                    loss = loss / cfg.n_accumulate
+                    loss = loss / self.n_accumulate
                     scaler.scale(loss).backward()
                 for k, v in losses.items():
                     b_losses[k].append(v.item())
@@ -83,7 +109,7 @@ class Trainer:
                     b_metrics[k].append(v)
 
             with self.model.no_sync():
-                for j in range(cfg.n_accumulate - 1):
+                for j in range(self.n_accumulate - 1):
                     step_forward()
             step_forward()
             scaler.unscale_(self.optimizer)
@@ -105,9 +131,9 @@ class Trainer:
             speed = 1.0 / (time.time() - cur_time)
             passed_time = (time.time() - start_time) / 3600
 
-            estimate_time = (cfg.nr_step - self.step) / n_trained * passed_time
+            estimate_time = (self.nr_step - self.step) / n_trained * passed_time
             log_str = (
-                f"Train Step: [{self.step}/{cfg.nr_step}], "
+                f"Train Step: [{self.step}/{self.nr_step}], "
                 f"{loss_str}, {metric_str}, "
                 f"Speed: {speed:.3f} m/s, "
                 f"Passed: {passed_time:.3f} h, "
@@ -123,8 +149,8 @@ class Trainer:
 
             cur_time = time.time()
             if (
-                i % cfg.chk_step_interval[0] == 0
-                or cur_time - last_saved_time > cfg.chk_time_interval
+                i % self.chk_step_interval[0] == 0
+                or cur_time - last_saved_time > self.chk_time_interval
             ):
                 self.save_checkpoint()
                 last_saved_time = cur_time
@@ -139,7 +165,7 @@ class Trainer:
             "state_dict": self.model.state_dict(),
             "optimizer": self.optimizer.state_dict(),
         }
-        filename = cfg.checkpoint_dir / f"checkpoint-step-{self.step}.pth"
+        filename = self.model_dir / f"checkpoint-step-{self.step}.pth"
 
         self.logger.info(f"Saving checkpoint: {filename} ...")
         torch.save(state, filename)
@@ -147,15 +173,15 @@ class Trainer:
 
     def load_checkpoint(self):
         latest = -1
-        for path in cfg.model_dir.iterdir():
+        for path in self.model_dir.iterdir():
             if path.stem.startswith("checkpoint-step-"):
                 step = int(re.findall(r"\d+", path.stem)[0])
                 latest = max(latest, step)
         if latest != -1:
-            filename = cfg.model_dir / f"checkpoint-step-{latest}.pth"
+            filename = self.model_dir / f"checkpoint-step-{latest}.pth"
             if self.world_rank == 0:
                 self.logger.info(f"Loading checkpoint: {filename} ...")
-            checkpoint = torch.load(filename, map_location="cpu")
+            checkpoint = torch.load(filename, map_location="cpu", weights_only=True)
             self.step = checkpoint["step"]
             self.model.load_state_dict(checkpoint["state_dict"])
             self.optimizer.load_state_dict(checkpoint["optimizer"])
@@ -163,7 +189,7 @@ class Trainer:
                 self.logger.info(f"Checkpoint '{filename}' (step {self.step}) loaded")
         else:
             pretrain_path = (
-                cfg.pretrain_model_dir / f"pretrain_weights.pth"
+                self.pretrain_model_dir / f"pretrain_weights.pth"
             )
             if self.world_rank == 0:
                 self.logger.info(f"Loading pretrain checkpoint: {pretrain_path} ...")
@@ -180,20 +206,16 @@ class Trainer:
     def sync_checkpoint(self):
         while True:
             path = self.chk_worker.get()
-            print(f"Working on {path}")
-            if cfg.checkpoint_dir != cfg.model_dir:
-                shutil.copy(path, cfg.model_dir)
-                path.unlink()
             print(f"Finished {path}")
             cur_step = int(re.findall(r"\d+", path.stem)[0])
-            for it in cfg.chk_step_interval:
+            for it in self.chk_step_interval:
                 if cur_step % it == 0:
                     print(f"Clean checkpoint every {it} step")
-                    for chk in cfg.model_dir.iterdir():
+                    for chk in self.model_dir.iterdir():
                         if chk.stem.startswith("checkpoint"):
                             chk_step = int(re.findall(r"\d+", chk.stem)[0])
                             if chk_step % it != 0:
-                                chk_path = cfg.model_dir / chk
+                                chk_path = self.model_dir / chk
                                 print(f"Remove {chk_path}")
                                 chk_path.unlink()
             self.chk_worker.task_done()

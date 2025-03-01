@@ -6,7 +6,6 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
-from common import config as cfg
 from .dataset import TestDataset
 
 
@@ -18,7 +17,7 @@ class TestSampler:
     def __iter__(self):
         i = 0
         while True:
-            if i == self.end_iter - 1:
+            if i == self.end_iter:
                 return
             else:
                 yield i

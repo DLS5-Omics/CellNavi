@@ -1,0 +1,24 @@
+{
+    "global_batch_size": 128,
+    "local_batch_size": 1,
+    "n_cls": 2058,
+    "mixed_precision": true,
+    "nr_step": 3000,
+    "warmup_step": 500,
+    "lr": 0.001,
+    "chk_time_interval": 3600,
+    "chk_step_interval": 100,
+
+    "saved_dir": "../dataset_full/",
+    "pretrained_dir": "../dataset_full/",
+    "dataset_dir": "../dataset_full/",
+    "log_dir": "../dataset_full/log",
+    "model_dir": "../dataset_full/finetune/model",
+    "pretrain_model_dir": "../dataset_full/pretrain",
+
+    "train_data": "set3_example_train.h5ad",
+    "test_data": "set3_example_test.h5ad",
+    "dist_graph" : "shortest_path_integrated_network_setting3_all_genes.csv",
+    "adj_graph" : "integrated_network_setting3_all_genes.csv"
+
+}

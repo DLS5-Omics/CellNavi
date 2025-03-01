@@ -2,7 +2,8 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 
-from common import config as cfg
+# from common import config as cfg
+import numpy as np
 from .base_model import BaseModel
 from .attention import TransformerEncoder, TransformerDecoder
 from .rawcount_encoding import RawCountEncoding
@@ -13,6 +14,7 @@ class PretrainModel(BaseModel):
         super(PretrainModel, self).__init__()
         self.pretrain = pretrain
         self.d_model = 256
+        self.bins = np.linspace(0, 9.3, 65)
 
         self.embed_exp = nn.Sequential(nn.Linear(1, self.d_model), nn.Dropout(0.1))
         self.embed_ratio = nn.Sequential(
@@ -45,7 +47,7 @@ class PretrainModel(BaseModel):
             nn.LayerNorm(self.d_model),
             nn.Linear(self.d_model, self.d_model),
             nn.ReLU(),
-            nn.Linear(self.d_model, len(cfg.bins)),
+            nn.Linear(self.d_model, len(self.bins)),
         )
         if not self.pretrain:
             for x in self.decoder.parameters():
