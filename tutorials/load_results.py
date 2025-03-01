@@ -2,6 +2,7 @@
 import os
 from collections import defaultdict
 import sys
+import json
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parent.parent))
@@ -13,7 +14,7 @@ from tqdm import tqdm
 import numpy as np
 from tabulate import tabulate
 
-from common import config as cfg
+# from common import config as cfg
 from model.finetune_model import FinetuneModel as model_fn
 from data_provider.train_loader import TrainLoader
 from data_provider.validation_loader import ValidationLoader
@@ -23,14 +24,14 @@ import pandas as pd
 
 
 
-def get_checkpoint_path(step):
-    model_path = os.path.join(cfg.model_dir, "checkpoint-step-%s.pth" % step)
+def get_checkpoint_path(step, model_dir):
+    model_path = os.path.join(model_dir, "checkpoint-step-%s.pth" % step)
     return model_path
 
 
-def load_model(step):
+def load_model(step, model_dir):
     model = model_fn()
-    checkpoint_path = get_checkpoint_path(step)
+    checkpoint_path = get_checkpoint_path(step, model_dir)
     checkpoint = torch.load(checkpoint_path, map_location=torch.device("cpu"))
     parsed_dict = {}
     for k, v in checkpoint["state_dict"].items():
@@ -84,7 +85,10 @@ def evaluate(checkpoint):
     """
     Test checkpoint
     """
-    model = load_model(checkpoint)
+    with open('../trainer/config.json', 'r') as f:
+        params = json.load(f)
+    model_dir = Path(params['model_dir'])
+    model = load_model(checkpoint, model_dir)
     model = model.eval()
 
     if torch.cuda.is_available():
