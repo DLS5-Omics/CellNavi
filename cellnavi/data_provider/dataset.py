@@ -13,8 +13,6 @@ import torch
 from torch.utils.data.dataset import Dataset
 import scipy.sparse
 
-# from common import config as cfg
-
 
 class LMDBReader:
     def __init__(self, db_path):

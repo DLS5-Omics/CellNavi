@@ -11,11 +11,10 @@ import torch
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.tensorboard import SummaryWriter
 
-from data_provider.train_loader import TrainLoader
-from data_provider.validation_loader import ValidationLoader
-# from common import config as cfg
+from cellnavi.data_provider.train_loader import TrainLoader
+from cellnavi.data_provider.validation_loader import ValidationLoader
 from pathlib import Path
-from model.finetune_model import FinetuneModel as model_fn
+from cellnavi.model.finetune_model import FinetuneModel as model_fn
 
 
 class Trainer:
@@ -50,7 +49,6 @@ class Trainer:
         self.vp = ValidationLoader()
         self.model = model_fn().to(self.device)
         if world_rank == 0:
-            # self.logger = cfg.train_logger
             self.logger = Logger(self.log_dir / "train_log.txt")
             self.logger.info(str(self.model))
         self.model = DDP(self.model, device_ids=[self.local_rank])

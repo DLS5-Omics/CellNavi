@@ -12,12 +12,9 @@ import torch
 import torch.nn.functional as F
 from tqdm import tqdm
 import numpy as np
-from tabulate import tabulate
-from model.finetune_model import FinetuneModel as model_fn
-from data_provider.train_loader import TrainLoader
-from data_provider.validation_loader import ValidationLoader
-import scanpy
-import anndata
+from cellnavi.model.finetune_model import FinetuneModel as model_fn
+from cellnavi.data_provider.train_loader import TrainLoader
+from cellnavi.data_provider.validation_loader import ValidationLoader
 import pandas as pd
 
 
@@ -30,7 +27,7 @@ def get_checkpoint_path(step, model_dir):
 def load_model(step, model_dir):
     model = model_fn()
     checkpoint_path = get_checkpoint_path(step, model_dir)
-    checkpoint = torch.load(checkpoint_path, map_location=torch.device("cpu"))
+    checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=True)
     parsed_dict = {}
     for k, v in checkpoint["state_dict"].items():
         if k.startswith("module."):

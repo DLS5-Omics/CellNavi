@@ -3,7 +3,6 @@ from torch import nn
 import torch.nn.functional as F
 from .base_model import BaseModel
 from .pretrain_model import PretrainModel
-from sklearn.metrics import f1_score
 
 
 class FinetuneModel(BaseModel):

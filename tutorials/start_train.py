@@ -1,6 +1,7 @@
 import os
 import sys
 from pathlib import Path
+from cellnavi.trainer import Trainer
 
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
@@ -35,7 +36,6 @@ def main():
         rank=world_rank,
     )
     torch.cuda.set_device(local_rank)
-    from trainer import Trainer
 
     with Trainer(local_rank, world_rank) as trainer:
         trainer.train()
