@@ -1,6 +1,14 @@
 # CellNavi
 
-CellNavi is a deep learning framework designed to predict genes driving cellular transitions.
+CellNavi is a deep learning framework designed to predict genes driving cellular transitions. It is trained on large-scale, high-dimensional single-cell transcriptomic data, along with prior causal gene graphs that reveal the underlying structure of cell states. By projecting cellular data onto this biologically meaningful space with reduced dimensionality and enhanced biological relevance, CellNavi provides a universal framework that generalizes across diverse cellular contexts, with diverse applications include:
+
+- identifying CRISPR target
+- predicting master regulator
+- discovering disease driver
+- elucidating drug MoA
+
+![overview](overview.png)
+
 
 ## Getting Started
 
