@@ -7,7 +7,10 @@ CellNavi is a deep learning framework designed to predict genes driving cellular
 - discovering disease driver
 - elucidating drug MoA
 
-![overview](cellnavi/overview.png)
+<!-- ![overview](cellnavi/overview.png) -->
+<p align="center">
+  <img src="cellnavi/overview.png" width="80%">
+</p>
 
 
 
