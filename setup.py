@@ -7,7 +7,7 @@ def parse_requirements(filename):
 setup(
     name="cellnavi",
     version="0.0.1",
-    description="CellNavi is a deep learning framework designed to predict genes driving cellular transitions."
+    description="CellNavi is a deep learning framework designed to predict genes driving cellular transitions.",
     packages=find_packages(),
     install_requires=parse_requirements("requirements.txt"),
     python_requires=">=3.12",
