@@ -9,12 +9,12 @@
     "chk_time_interval": 3600,
     "chk_step_interval": 100,
 
-    "saved_dir": "../dataset_full/",
-    "pretrained_dir": "../dataset_full/",
-    "dataset_dir": "../dataset_full/",
-    "log_dir": "../dataset_full/log",
-    "model_dir": "../dataset_full/finetune/model",
-    "pretrain_model_dir": "../dataset_full/pretrain",
+    "saved_dir": "../data/",
+    "pretrained_dir": "../data/",
+    "dataset_dir": "../data/",
+    "log_dir": "../data/log",
+    "model_dir": "../data/finetune/model",
+    "pretrain_model_dir": "../data/pretrain",
 
     "train_data": "set3_example_train.h5ad",
     "test_data": "set3_example_test.h5ad",

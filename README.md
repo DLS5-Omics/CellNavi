@@ -3,16 +3,15 @@
 CellNavi is a deep learning framework designed to predict genes driving cellular transitions. It is trained on large-scale, high-dimensional single-cell transcriptomic data, along with prior causal gene graphs that reveal the underlying structure of cell states. By projecting cellular data onto this biologically meaningful space with reduced dimensionality and enhanced biological relevance, CellNavi provides a universal framework that generalizes across diverse cellular contexts, with diverse applications include:
 
 - identifying CRISPR target
-- predicting master regulator
+- predicting mastergit regulator
 - discovering disease driver
 - elucidating drug MoA
 
-![overview](overview.png)
+![overview](cellnavi/overview.png)
 
 
-## Getting Started
 
-### Installation
+## Installation
 
 1. Clone the repo
 
@@ -52,6 +51,16 @@ The full descriptions of the datasets and the studies of origin can be found in 
 - Example training and testing datasets and model path file under 1,000 training step, with adjacency matrix graph and shortest path graph provided: [link](https://www.dropbox.com/scl/fo/rq9klah7vqksn6e66dsae/AK3DJ2sxwL3MoWCOcQ9ZfFE?rlkey=1t4kz2vraif0ifu72c6gmo6xl&st=gpvwfw3j&dl=0)
 
 
-## Citation
 
-Wang, T., Pan, Y., Ju, F., Zheng, S., Liu, C., Min, Y., Liu, X., Xia, H., Liu, G., Liu, H., \& Deng, P. (2024). Directing cellular transitions on gene graph-enhanced cell state manifold. _bioRxiv_, 2024.10.27.620174; doi: [https://doi.org/10.1101/2024.10.27.620174](https://doi.org/10.1101/2024.10.27.620174)
+
+## Citation   
+```
+@article{wang2024directing,
+  title={Directing cellular transitions on gene graph-enhanced cell state manifold},
+  author={Wang, Tianze and Pan, Yan and Ju, Fusong and Zheng, Shuxin and Liu, Chang and Min, Yaosen and Liu, Xinwei and Xia, Huanhuan and Liu, Guoqing and Liu, Haiguang and others},
+  journal={bioRxiv},
+  pages={2024--10},
+  year={2024},
+  publisher={Cold Spring Harbor Laboratory}
+}
+```

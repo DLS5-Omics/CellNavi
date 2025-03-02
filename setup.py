@@ -5,7 +5,7 @@ def parse_requirements(filename):
         return [line.strip() for line in f if line.strip() and not line.startswith("#")]
 
 setup(
-    name="CellNavi",
+    name="cellnavi",
     version="0.0.1",
     description="CellNavi is a deep learning framework designed to predict genes driving cellular transitions."
     packages=find_packages(),

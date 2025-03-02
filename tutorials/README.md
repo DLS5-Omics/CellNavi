@@ -13,10 +13,9 @@ mkdir log
 mkdir finetune
 mkdir finetune/model
 mkdir pretrain
-mkdir pretrain/model
 ```
 
-2. Move the pretrained model checkpoint and gene2token file to `saved_dir/pretrain/model`
+2. Move the pretrained model checkpoint and gene2token file to `saved_dir/pretrain`
 
 3. Move example datasets and graphs to `dataset_dir`
 
