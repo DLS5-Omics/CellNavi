@@ -87,7 +87,7 @@ class Trainer:
             def step_forward():
                 nonlocal dp, scaler
                 data = {k: v.to(self.device) for k, v in next(dp).items()}
-                with torch.amp.autocast('cuda', enabled = self.mixed_precision):
+                with torch.amp.autocast('cuda', enabled = json.loads(self.mixed_precision)):
                     output = self.model(data)
                     losses = {k: v for k, v in output.items() if k.endswith("loss")}
                     metrics = {

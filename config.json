@@ -1,24 +1,18 @@
 {
     "global_batch_size": 128,
     "local_batch_size": 1,
-    "n_cls": 2058,
-    "mixed_precision": true,
+    "mixed_precision": "true",
     "nr_step": 3000,
     "warmup_step": 500,
     "lr": 0.001,
     "chk_time_interval": 3600,
     "chk_step_interval": 100,
-
-    "saved_dir": "../data/",
-    "pretrained_dir": "../data/",
     "dataset_dir": "../data/",
     "log_dir": "../data/log",
     "model_dir": "../data/finetune/model",
     "pretrain_model_dir": "../data/pretrain",
-
     "train_data": "Re-stimulated_t_example_train.h5ad",
     "test_data": "Resting_t_example_test.h5ad",
-    "dist_graph" : "dist_t_matrix.csv",
-    "adj_graph" : "adj_t_matrix.csv"
-
+    "dist_graph": "dist_t_matrix.csv",
+    "adj_graph": "adj_t_matrix.csv"
 }

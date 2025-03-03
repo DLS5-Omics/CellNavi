@@ -9,13 +9,6 @@ import torch
 
 
 def main():
-    world_size = int(os.environ["WORLD_SIZE"])
-    world_rank = int(os.environ["RANK"])
-    local_rank = int(os.environ["LOCAL_RANK"])
-    master_ip = os.environ["MASTER_ADDR"]
-    master_port = os.environ["MASTER_PORT"]
-    master_uri = "tcp://%s:%s" % (master_ip, master_port)
-
     try:
         # Check the number of GPUs available
         gpu_count = torch.cuda.device_count()
@@ -26,10 +19,23 @@ def main():
     except Exception as e:
 
         print(f"Error checking CUDA availability: {e}")
-
+        
+    if 'RANK' not in os.environ:
+        os.environ['RANK'] = '0'
+        os.environ["LOCAL_RANK"] = '0'
+        os.environ["WORLD_SIZE"] = '1'
+        os.environ["MASTER_ADDR"] = '127.0.0.1'
+        os.environ["MASTER_PORT"] = '29500'
+        
+    world_size = int(os.environ["WORLD_SIZE"])
+    world_rank = int(os.environ["RANK"])
+    local_rank = int(os.environ["LOCAL_RANK"])
+    master_ip = os.environ["MASTER_ADDR"]
+    master_port = os.environ["MASTER_PORT"]
+    master_uri = "tcp://%s:%s" % (master_ip, master_port)
+    
 
     torch.distributed.init_process_group(
-        
         backend="nccl",
         init_method=master_uri,
         world_size=world_size,

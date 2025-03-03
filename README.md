@@ -79,7 +79,7 @@ Additionally, logits for each potential perturbed gene can be calculated in the 
 python load_results.py -c <STEP TO EVALUATE>
 ```
 
-Please refer to `tutorials/inference.ipynb` for more detailed instructions.
+Please refer to `tutorials/tutorial.ipynb` for more detailed instructions.
 
 
 
