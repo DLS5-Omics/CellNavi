@@ -16,9 +16,9 @@
     "model_dir": "../data/finetune/model",
     "pretrain_model_dir": "../data/pretrain",
 
-    "train_data": "set3_example_train.h5ad",
-    "test_data": "set3_example_test.h5ad",
-    "dist_graph" : "shortest_path_integrated_network_setting3_all_genes.csv",
-    "adj_graph" : "integrated_network_setting3_all_genes.csv"
+    "train_data": "Re-stimulated_t_example_train.h5ad",
+    "test_data": "Resting_t_example_test.h5ad",
+    "dist_graph" : "dist_t_matrix.csv",
+    "adj_graph" : "adj_t_matrix.csv"
 
 }
