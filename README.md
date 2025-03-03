@@ -16,6 +16,8 @@ CellNavi is a deep learning framework designed to predict genes driving cellular
 
 ## Installation
 
+CellNavi requires NVIDIA GPUs for training and inference, and it has been tested successfully on common models such as V100 and A100. The environment for CellNavi requires Python version 3.12.2 or higher and CUDA version 12.1 or higher.
+
 1. Create a new conda environment (Highly recommend!)
 
 ```sh
