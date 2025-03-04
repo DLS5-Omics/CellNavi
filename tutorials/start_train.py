@@ -27,11 +27,11 @@ def main():
         os.environ["MASTER_ADDR"] = '127.0.0.1'
         os.environ["MASTER_PORT"] = '29500'
         
-    world_size = int(os.environ["WORLD_SIZE"])
-    world_rank = int(os.environ["RANK"])
-    local_rank = int(os.environ["LOCAL_RANK"])
-    master_ip = os.environ["MASTER_ADDR"]
-    master_port = os.environ["MASTER_PORT"]
+    world_size = int(os.environ["WORLD_SIZE"]) ## the total number of processes in the distributed setup
+    world_rank = int(os.environ["RANK"]) ## the global rank of the process within the distributed setup
+    local_rank = int(os.environ["LOCAL_RANK"]) ## the rank of the process on the local machine 
+    master_ip = os.environ["MASTER_ADDR"] ## the IP address or hostname of the master node (rank 0)
+    master_port = os.environ["MASTER_PORT"] ## the port number on which the master node listens for incoming connections from worker processes
     master_uri = "tcp://%s:%s" % (master_ip, master_port)
     
 
